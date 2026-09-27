@@ -1,0 +1,10 @@
+# caches and build output
+__pycache__/
+*.pyc
+.venv/
+
+# OS dirt
+.DS_Store
+
+# receipts are run artifacts, not source
+results/

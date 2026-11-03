@@ -39,6 +39,30 @@ class TestIdShapes(unittest.TestCase):
         self.assertTrue(cc.id_matches("instagram", "DQ7hsrjEj3d"))
         self.assertFalse(cc.id_matches("instagram", "short"))
 
+    def test_instagram_shortcode_alphabet(self):
+        # Real captured IDs, including a trailing hyphen; keep their identity intact.
+        for item_id in ("DLgdnbvx-Np", "DUPJFVvDA_2", "DLHZFI-h5g-"):
+            with self.subTest(item_id=item_id):
+                self.assertTrue(cc.id_matches("instagram", item_id))
+                resolver = cc._NullResolver({("instagram", item_id): ("Captured", "ok")})
+                for token in (f"instagram/{item_id}", *(f"https://www.instagram.com/{kind}/{item_id}/"
+                                                       for kind in ("p", "reel", "tv"))):
+                    with self.subTest(token=token):
+                        citations = [c for c in cc.extract_citations(token) if c.source == "instagram"]
+                        self.assertEqual([c.item_id for c in citations], [item_id])
+                        cc.resolve_citations(citations, resolver)
+                        self.assertEqual(citations[0].status, "FOUND")
+
+    def test_instagram_shortcode_boundaries(self):
+        for item_id in ("short-id", "DLgdnbvx-NpABC", "DUPJFVvDA/2", "DUPJFVvDA.2",
+                        "DUPJFVvDA+2", "DUPJFVvDAé2"):
+            with self.subTest(item_id=item_id):
+                self.assertFalse(cc.id_matches("instagram", item_id))
+        # An overlong path must not become a different, truncated Library ID.
+        for item_id in ("DUPJFVvDA_2abc", "DLgdnbvx-Npabc", "DPpgI3CCBvjabc"):
+            with self.subTest(item_id=item_id):
+                self.assertFalse(cc._extract_urls(f"https://www.instagram.com/p/{item_id}/"))
+
     def test_hex16_sources(self):
         for source in ("github-stars", "bookmarks", "obsidian-vault"):
             self.assertTrue(cc.id_matches(source, "005b02fde07f21fe"))

@@ -125,6 +125,27 @@ These are saved-source leads, not claims of their authors' endorsement.
 | Artifact Extraction Request, chatgpt/687305b8-76c0-8008-bed9-5e50a72db406 | Extraction rather than advice; delivered runnable code and source excerpts, not a reading list. |
 | [WebFetch research caution](https://www.reddit.com/r/ClaudeAI/comments/1vim8b7/), reddit/1vim8b7 | The reported fabricated quotations motivated looking in captured bodies, never generated fetch summaries. The thread's claims about particular models/tools remain unverified. |
 
+## Instagram identity regression (03/11/2026)
+
+Instagram IDs retain `_` and `-`, including a trailing hyphen, in citation
+validation, post/reel/tv URL extraction, `resolve`, and Source Audition. The
+existing 10–12-character limit is unchanged; an overlong URL path is not
+silently shortened into another Library ID. This is captured-library
+compatibility, not a claim of a complete upstream Instagram URL specification.
+
+```sh
+python3 -B -W error::ResourceWarning -m unittest -v
+python3 -B cli.py selfcheck
+```
+
+Real captured items `instagram/DLgdnbvx-Np`, `instagram/DUPJFVvDA_2`, and
+`instagram/DLHZFI-h5g-` previously failed the shared grammar. Their full captured
+bodies now pass through the normal local quote command, with exact quotation
+matches and checksummed receipts; both direct IDs and URLs resolve through the
+citation CLI. These are identity/transport witnesses, not endorsement of their
+captions, generated suggestions, visual interpretation, or evidence of recurring
+Sam use. No Library records or previous receipts were rewritten.
+
 ## Receipts
 
 Every audit can emit a canonical JSON receipt: sorted keys, sha-256 signature

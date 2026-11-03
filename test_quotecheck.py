@@ -58,6 +58,23 @@ class QuoteTests(unittest.TestCase):
                     qc.audit(rows, loader)
                 loader.assert_not_called()
 
+    def test_instagram_shortcode_validation_and_matching(self):
+        for item_id in ("DLgdnbvx-Np", "DUPJFVvDA_2", "DLHZFI-h5g-"):
+            citation = "instagram/" + item_id
+            with self.subTest(citation=citation):
+                with patch.object(qc, "fetch_body", return_value={
+                        "status": "AVAILABLE", "body": "quarter notes", "title": "Capture"}) as loader:
+                    receipt = qc.audit([row(citation=citation)], loader)
+                loader.assert_called_once_with(citation)
+                self.assertEqual(receipt["verdict"], "MATCHED")
+                self.assertEqual(receipt["rows"][0]["matches"][0]["mode"], "EXACT")
+                self.assertTrue(cc.verify_receipt(receipt))
+        for item_id in ("short-id", "DLgdnbvx-NpABC", "DUPJFVvDA/2"):
+            with self.subTest(item_id=item_id), patch.object(qc, "fetch_body") as loader:
+                with self.assertRaises(ValueError):
+                    qc.audit([row(citation="instagram/" + item_id)], loader)
+                loader.assert_not_called()
+
     def test_deduplication_snapshot_hash_and_receipt(self):
         body = "quarter notes then eighth notes"
         with patch.object(qc, "fetch_body", return_value={"status": "AVAILABLE", "body": body, "title": "Test"}) as loader:

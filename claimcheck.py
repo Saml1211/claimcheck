@@ -41,7 +41,7 @@ _SOURCES: Dict[str, Dict[str, str]] = {
     "chatgpt": {"label": "ChatGPT", "pattern": r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"},
     "perplexity": {"label": "Perplexity", "pattern": r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"},
     "reddit": {"label": "Reddit", "pattern": r"[a-z0-9]{5,8}"},
-    "instagram": {"label": "Instagram", "pattern": r"[A-Za-z0-9]{10,12}"},
+    "instagram": {"label": "Instagram", "pattern": r"[A-Za-z0-9_-]{10,12}"},
     "youtube": {"label": "YouTube", "pattern": r"[A-Za-z0-9_-]{11}"},
     "github-stars": {"label": "GitHub stars", "pattern": r"[0-9a-f]{16}"},
     "bookmarks": {"label": "Bookmarks", "pattern": r"[0-9a-f]{16}"},
@@ -103,7 +103,7 @@ def _mask_code_fences(text: str) -> str:
 # Full URLs we can map straight to a library item id.
 _URL_PATTERNS = [
     (r"reddit\.com/r/[A-Za-z0-9_\-]+/comments/([a-z0-9]{5,8})", "reddit"),
-    (r"instagram\.com/(?:p|reel|tv)/([A-Za-z0-9]{10,12})", "instagram"),
+    (r"instagram\.com/(?:p|reel|tv)/([A-Za-z0-9_-]{10,12})(?![A-Za-z0-9_-])", "instagram"),
     (r"youtube\.com/watch\?v=([A-Za-z0-9_-]{11})", "youtube"),
     (r"youtu\.be/([A-Za-z0-9_-]{11})", "youtube"),
 ]
